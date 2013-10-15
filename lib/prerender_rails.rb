@@ -65,12 +65,12 @@ module Rack
         prerendered_response = get_prerendered_page_response(env)
 
         if prerendered_response && prerendered_response.is_a?(Net::HTTPSuccess)
-          response = Rack::Response.new(prerendered_response.body, 200, [])
+          response = Rack::Response.new(prerendered_response.body, 200, { 'X-Prerender' => 'true' })
           return response.finish
         end
       end
 
-      @app.call(env)  
+      @app.call(env)
     end
 
     def should_show_prerendered_page(env)
@@ -102,7 +102,7 @@ module Rack
           blacklistedUrl || blacklistedReferer
         }
         return false
-      end 
+      end
 
       return true
     end
